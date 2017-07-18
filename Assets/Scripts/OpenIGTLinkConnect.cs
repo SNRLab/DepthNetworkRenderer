@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections;
 using System.Threading;
 using System.Collections.Generic;
+using OpenIGTLink;
 
 //using System.Runtime.InteropServices;
 
@@ -63,30 +64,22 @@ public class OpenIGTLinkConnect : MonoBehaviour {
     private void StartupClient() {
         // Attempt to Connect
         try {
-            // Establish the remote endpoint for the socket.
-            IPAddress ipAddress = IPAddress.Parse(ipString);
-            remoteEP = new IPEndPoint(ipAddress, port);
-
-            // Create a TCP/IP  socket.
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) {
-                Blocking = false
-            };
-            //socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+            var client = new OpenIGTLinkClient(ipString, port);
 
             try {
                 // Connect the socket to the remote endpoint. Catch any errors.
-                socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), socket);
+                client.BeginConnect(ConnectCallback);
                 connectionStarted = true;
 
                 StartCoroutine(Receive());
-                Debug.Log(String.Format("Ready to receive data"));
+                Debug.Log("Ready to receive data");
             }
             catch (Exception e) {
-                Debug.Log(String.Format("Exception : {0}", e.ToString()));
+                Debug.Log(string.Format("Exception : {0}", e.ToString()));
             }
         }
         catch (Exception e) {
-            Debug.Log(String.Format(e.ToString()));
+            Debug.Log(string.Format(e.ToString()));
         }
     }
 
