@@ -24,6 +24,8 @@ public class ImageServer : MonoBehaviour {
     private Texture2D currentImage;
     private string dateString;
 
+    private Vector3 zeroPosition = new Vector3(0, 0, 0);
+
     // Use this for initialization
     public void Start() {
         client = new UdpClient(ListenPort);
@@ -81,7 +83,12 @@ public class ImageServer : MonoBehaviour {
         }
         if (receivedImage != null) {
             currentImage.LoadImage(receivedImage);
-            gameObject.transform.localPosition = position;
+
+            if (Input.GetKeyDown("z")) {
+                zeroPosition = position;
+            }
+
+            gameObject.transform.localPosition = position - zeroPosition;
             gameObject.transform.localEulerAngles = orientation;
 
             ImageOverlay.texture = currentImage;

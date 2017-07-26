@@ -28,6 +28,8 @@ public class RobotMovement : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.I)) {
             invert = -invert;
         }
+        
+        
 
         if (MovementType == 0) {
             float rollAmount = 0;
