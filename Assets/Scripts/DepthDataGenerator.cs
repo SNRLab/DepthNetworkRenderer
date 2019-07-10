@@ -6,8 +6,9 @@ public class DepthDataGenerator : MonoBehaviour {
     public string DataDirectory;
     public Camera BRDFCamera;
     public Camera DepthCamera;
-
+    public WebCam WebCam;
     private bool saveImages = false;
+   
 
     private void renderCamera(Camera camera, RenderTexture renderTexture, Texture2D outputTexture) {
         Rect oldRect = camera.rect;
@@ -35,11 +36,15 @@ public class DepthDataGenerator : MonoBehaviour {
     }
 
     private Texture2D renderDepthCamera() {
-        RenderTexture renderTexture = RenderTexture.GetTemporary(100, 100, 0, RenderTextureFormat.RFloat);
-        Texture2D outputTexture =
-            new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBAFloat, false);
+        //RenderTexture renderTexture = RenderTexture.GetTemporary(100, 100, 0, RenderTextureFormat.RFloat);
+        RenderTexture renderTexture = RenderTexture.GetTemporary(100, 100);
+        Texture2D outputTexture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBAFloat, false);
+        //RenderTexture renderTexture = RenderTexture.GetTemporary(100, 100);
+        //Texture2D outputTexture = new Texture2D(renderTexture.width, renderTexture.height);
         renderCamera(DepthCamera, renderTexture, outputTexture);
         RenderTexture.ReleaseTemporary(renderTexture);
+
+        
         return outputTexture;
     }
 
@@ -56,8 +61,15 @@ public class DepthDataGenerator : MonoBehaviour {
             File.WriteAllBytes(Path.Combine(DataDirectory, "brdf_" + dateString + ".png"), brdfImagePng);
 
             Texture2D depthTexture = renderDepthCamera();
-            byte[] depthImageExr = depthTexture.EncodeToEXR(Texture2D.EXRFlags.CompressZIP);
-            File.WriteAllBytes(Path.Combine(DataDirectory, "depth_" + dateString + ".exr"), depthImageExr);
+            byte[] bytes = depthTexture.EncodeToPNG();
+            File.WriteAllBytes(Path.Combine(DataDirectory, "depth_" + dateString + ".png"), bytes);
+
+            Texture2D webTexture = new Texture2D(WebCam.GetComponentInChildren<Renderer>().material.mainTexture.width, WebCam.GetComponentInChildren<Renderer>().material.mainTexture.height);
+            webTexture.SetPixels((WebCam.GetComponentInChildren<Renderer>().material.mainTexture as WebCamTexture).GetPixels());
+            webTexture.Apply();
+            byte[] webBytes = webTexture.EncodeToPNG();
+            File.WriteAllBytes(Path.Combine(DataDirectory, "rgb_" + dateString + ".png"), webBytes);
+
         }
     }
 }

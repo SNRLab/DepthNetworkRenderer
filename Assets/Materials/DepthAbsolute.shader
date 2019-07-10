@@ -26,8 +26,22 @@
             }
             
             //Fragment Shader
+			/*
             float frag (v2f i) : COLOR {
                return LinearEyeDepth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos)).r);
+            }
+			*/
+            half4 frag (v2f i) : COLOR {
+			   
+               float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos)).r);
+               half4 depth;
+            
+               depth.r = depthValue;
+               depth.g = depthValue;
+               depth.b = depthValue;
+            
+               depth.a = 1;
+               return depth;
             }
             ENDCG
         }

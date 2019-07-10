@@ -10,25 +10,26 @@ public class OpenIGTLinkFlag : MonoBehaviour {
     private Vector3 lastPosition;
     private bool movedPosition;
 
-    private const double Epsilon = 0.000001;
-
-    private void Start() {
+    private void Start()
+    {
         lastPosition = transform.localPosition;
     }
 
-    private void Update() {
-        if (Mathf.Abs(lastPosition.x - transform.localPosition.x) > Epsilon |
-            Mathf.Abs(lastPosition.y - transform.localPosition.y) > Epsilon |
-            Mathf.Abs(lastPosition.z - transform.localPosition.z) > Epsilon) {
+    void Update()
+    {
+        if (Mathf.Abs(lastPosition.x - transform.localPosition.x) > 0.000001 | Mathf.Abs(lastPosition.y - transform.localPosition.y) > 0.000001 | Mathf.Abs(lastPosition.z - transform.localPosition.z) > 0.000001)
+        {
             movedPosition = true;
             lastPosition = transform.localPosition;
         }
-        else {
+        else
+        {
             movedPosition = false;
         }
     }
 
-    public bool GetMovedPosition() {
+    public bool GetMovedPosition()
+    {
         return movedPosition;
     }
 }
