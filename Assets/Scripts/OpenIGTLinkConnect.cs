@@ -206,7 +206,7 @@ public class OpenIGTLinkConnect : MonoBehaviour {
 
             // Read data from the remote device.
             int bytesRead = client.EndReceive(ar);
-            Debug.Log(bytesRead.ToString());
+            //Debug.Log(bytesRead.ToString());
 
             // As far as I can tell, Unity will not let the callback occur with 0 bytes to read, so I cannot use a 0 bytes left method to determine ending, must read the data type and size from the Header
             // TODO: Current workaround: adding check for a full buffer of transforms (divisible by 106), this may fail with other data types, must make overflow buffer work as well
@@ -237,7 +237,7 @@ public class OpenIGTLinkConnect : MonoBehaviour {
                         }
                         state.dataSize = BitConverter.ToInt32(dataSizeBytes, 0) + 58;
 
-                        Debug.Log(String.Format("Data is of type {0} with name {1} and size {2}", dataType, state.name, state.dataSize));
+                        //Debug.Log(String.Format("Data is of type {0} with name {1} and size {2}", dataType, state.name, state.dataSize));
 
                         if (dataType.Equals("IMAGE"))
                         {
